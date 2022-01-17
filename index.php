@@ -10,7 +10,7 @@ https://github.com/yeyingorg/php_bwh_stock_checker
 
 # 搬瓦工相关
 $aff=31993; #aff号
-$bwh_domain="bwh81.net"; #搬瓦工域名，不带https://
+$bwh_domain="bwh88.net"; #搬瓦工域名，不带https://
 
 $promo_code="BWH3HYATVBJW"; #优惠码
 $promo_percentage="6.58%"; #优惠码百分比(带%)
@@ -61,7 +61,7 @@ height:50px;
 <body style="width: 99%; font-size: 20px;">
 
 <?php
-$cart = file_get_contents("https://$bwh_domain/cart.php");
+$cart = file_get_contents("https://bwh88.net/cart.php"); # 此处不可使用bwh81.net，会出错！建议国外vps使用bandwagonhost.com
 
 $tmp=strstr($cart, '<div class="cartbox">');
 $tmp=explode('<p align="center">',$tmp);
