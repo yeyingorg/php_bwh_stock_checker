@@ -3,7 +3,7 @@
 /*
 搬瓦工自动即时库存检测
 作者: 夜桜
-https://github.com/yeyingorg/bwh_stock_checker
+https://github.com/yeyingorg/php_bwh_stock_checker
 */
 
 # Config
