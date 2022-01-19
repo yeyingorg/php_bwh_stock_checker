@@ -6,7 +6,7 @@
 https://github.com/yeyingorg/php_bwh_stock_checker
 */
 
-# Config
+// ---------- 配置部分 ----------
 
 # 搬瓦工相关
 $aff=31993; #aff号
@@ -23,17 +23,19 @@ $site_title="搬瓦工全方案 即时库存检测";
 $site_since_year="2018";
 $say_something="本站已于2022年1月16日更新啦...(失踪人士回归)";
 
-?>
+// ---------- 配置部分结束 ----------
 
-<?php
-if (is_numeric($_GET['id'])) {
+$get_id = isset($_GET['id']) ? $_GET['id'] : null;
+$get_promo_code = isset($_GET['promo_code']) ? $_GET['promo_code'] : null;
+
+if (is_numeric($get_id)) {
     header("HTTP/1.1 303 See Other");
-    if ($_GET['id'] == 0) {
+    if ($get_id == 0) {
         header("location: https://$bwh_domain/aff.php?aff=$aff");
-    } elseif ($_GET['id'] == 1) {
+    } elseif ($get_id == 1) {
         header("location: https://$bwh_domain/aff.php?aff=$aff&gid=1");
     } else {
-        header("location: https://$bwh_domain/aff.php?aff=$aff&pid=" . $_GET['id']);
+        header("location: https://$bwh_domain/aff.php?aff=$aff&pid=" . $get_id);
     }
     exit;
 }
@@ -90,6 +92,7 @@ for ($i=1; $i<=$plan_count; $i++) {
     $tmp=str_replace('TOKYO','东京',$tmp);
     $tmp=str_replace(' ECOMMERCE','-E',$tmp);
     $tmp=str_replace('LIMITED EDITION','限量版',$tmp);
+    $tmp=str_replace('JAPAN','日本(软银)',$tmp); # SPECIAL 10G KVM PROMO V5 - JAPAN LIMITED EDITION # 其实这个套餐已经下架了加不加这条无所谓吧...
     $plan['name']=$tmp;
 
     #ssd
@@ -164,10 +167,12 @@ for ($i=1; $i<=$plan_count; $i++) {
     $plan['pricing']=$tmp;
 
     #pid
-    $tmp=explode('/cart.php?a=add&pid=',$cart_explode[$i]);
-    $tmp=explode("'",$tmp[1]);
-    $tmp=$tmp[0];
-    $plan['pid']=$tmp;
+    if (strpos($cart_explode[$i],"/cart.php?a=add&pid=") !== false) {
+        $tmp=explode('/cart.php?a=add&pid=',$cart_explode[$i]);
+        $tmp=explode("'",$tmp[1]);
+        $tmp=$tmp[0];
+        $plan['pid']=$tmp;
+    }
 
     #link and stock
     if (empty($plan['pid'])) {
@@ -180,11 +185,11 @@ for ($i=1; $i<=$plan_count; $i++) {
 
     #promo_code_pricing
     $promo_price = false;
-    if (in_array($_GET['promo_code'], array(1,2))) {
-        if ($_GET['promo_code'] == 1 && is_numeric(str_replace("%",'',$promo_percentage))) {
+    if (in_array($get_promo_code, array(1,2))) {
+        if ($get_promo_code == 1 && is_numeric(str_replace("%",'',$promo_percentage))) {
             $percentage=str_replace("%",'',$promo_percentage) * 0.01;
             $promo_price = true;
-        } elseif ($_GET['promo_code'] == 2 && is_numeric(str_replace("%",'',$special_promo_percentage))) {
+        } elseif ($get_promo_code == 2 && is_numeric(str_replace("%",'',$special_promo_percentage))) {
             $percentage=str_replace("%",'',$special_promo_percentage) * 0.01;
             $promo_price = true;
         }
@@ -282,7 +287,7 @@ $plans_cheapest[]=$plans_tokyo[0];
 <div>
 <p><?php echo $say_something;?></p>
 <p><?php if (!empty($promo_code) && !empty($promo_percentage)) {
-    if ($_GET['promo_code'] == 1 && $promo_price) {
+    if ($get_promo_code == 1 && $promo_price) {
         echo "优惠码 <span style=\"color: red;\">$promo_code</span> - $promo_percentage" . ' <a href="?promo_code=0">显示原价</a>';
     } else {
         echo "优惠码 $promo_code - $promo_percentage" . ' <a href="?promo_code=1">显示优惠价</a>';
@@ -294,7 +299,7 @@ if (!empty($promo_code) && !empty($promo_percentage) && !empty($special_promo_co
 }
 
 if (!empty($special_promo_code) && !empty($special_promo_percentage)) {
-    if ($_GET['promo_code'] == 2 && $promo_price) {
+    if ($get_promo_code == 2 && $promo_price) {
         echo "节日优惠码 <span style=\"color: red;\">$special_promo_code</span> - $special_promo_percentage" . ' <a href="?promo_code=0">显示原价</a>';
     } else {
         echo "节日优惠码 $special_promo_code - $special_promo_percentage" . ' <a href="?promo_code=2">显示优惠价</a>';
