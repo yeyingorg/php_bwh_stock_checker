@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>搬瓦工价格表</title>
+    <link rel="stylesheet" href="https://cdn.staticfile.org/mdui/1.0.2/css/mdui.min.css" crossorigin="anonymous">
+    <script src="https://cdn.staticfile.org/mdui/1.0.2/js/mdui.min.js"></script>
+    <script>
+        // 显示优惠码表格
+        function DisplayHeader() {
+            for (var i = 0; i < Backend['promo'].length; i++) {
+                var NameCell = document.createElement('td');
+                NameCell.innerHTML = Backend['promo'][i]['name'];
+                var DiscountCell = document.createElement('td');
+                DiscountCell.innerHTML = Backend['promo'][i]['discount'] + '%';
+                var CodeCell = document.createElement('td');
+                CodeCell.innerHTML = Backend['promo'][i]['code'];
+                var ApplyCell = document.createElement('td');
+                ApplyCell.innerHTML = '<button class="mdui-btn mdui-btn-icon mdui-ripple" onclick="RefreshDiscount(' + Backend['promo'][i]['discount'] + ')">\
+                    <i class="mdui-icon material-icons">add</i></button>';
+                var TableRow = document.createElement('tr');
+                TableRow.appendChild(NameCell);
+                TableRow.appendChild(DiscountCell);
+                TableRow.appendChild(CodeCell);
+                TableRow.appendChild(ApplyCell);
+                PromoCode.appendChild(TableRow);
+            }
+        }
+
+        // 显示配置价格表格
+        function DisplayContent() {
+            for (var i = 0; i < Backend['plans'].length; i++) {
+                var NameCell = document.createElement('td');
+                NameCell.innerHTML = Backend['plans'][i]['name'];
+                var CpuCell = document.createElement('td');
+                CpuCell.innerHTML = Backend['plans'][i]['cpu'];
+                var RamCell = document.createElement('td');
+                RamCell.innerHTML = Backend['plans'][i]['ram'];
+                var SsdCell = document.createElement('td');
+                SsdCell.innerHTML = Backend['plans'][i]['ssd'];
+                var TrafficCell = document.createElement('td');
+                TrafficCell.innerHTML = Backend['plans'][i]['transfer'];
+                var BandCell = document.createElement('td');
+                BandCell.innerHTML = Backend['plans'][i]['linkspeed'];
+                var PriceCell = document.createElement('td');
+                PriceCell.innerHTML = DisplayPrice(Backend['plans'][i]['pricing'], 0);
+                var DiscountCell = document.createElement('td');
+                DiscountCell.innerHTML = DisplayPrice(Backend['plans'][i]['pricing'], Disc);
+                var StockCell = document.createElement('td');
+                StockCell.innerHTML = DisplayStock(Backend['plans'][i]['stock']);
+                var UrlCell = document.createElement('td');
+                UrlCell.innerHTML = Backend['plans'][i]['stock'] ? DisplauUrl(Backend['plans'][i]['link']) : '';
+                var TableRow = document.createElement('tr');
+                TableRow.appendChild(NameCell);
+                TableRow.appendChild(CpuCell);
+                TableRow.appendChild(RamCell);
+                TableRow.appendChild(SsdCell);
+                TableRow.appendChild(TrafficCell);
+                TableRow.appendChild(BandCell);
+                TableRow.appendChild(PriceCell);
+                TableRow.appendChild(DiscountCell);
+                TableRow.appendChild(StockCell);
+                TableRow.appendChild(UrlCell);
+                MainPrice.appendChild(TableRow);
+            }
+        }
+        function DisplayPrice(raw, disc) {
+            PriceStr = '';
+            if (disc == 0) { Factor = 1; }
+            else { Factor = (100 - disc) / 100; }
+            PriceStr = PriceStr + (raw[0]['pricing'] * Factor).toFixed(2) + '/' + raw[0]['cycle'];
+            for (var i = 1; i < raw.length; i++) {
+                PriceStr = PriceStr + '<br />' + (raw[i]['pricing'] * Factor).toFixed(2) + '/' + raw[i]['cycle'];
+            }
+            return PriceStr;
+        }
+        function DisplayStock(have) {
+            Icon = have ? 'check' : 'close';
+            return '<i class="mdui-icon material-icons">' + Icon + '</i>';
+        }
+
+        function DisplauUrl(url) {
+            return '<a class="mdui-btn mdui-btn-icon mdui-ripple" href="' + url + '"><i class="mdui-icon material-icons">link</i></a>';
+        }
+
+        // 使用选中的折扣刷新价格
+        function RefreshDiscount(disc) {
+            Disc = disc;
+            MainPrice.innerHTML = '';
+            DisplayContent();
+        }
+        
+        // 显示标题等信息
+        function DisplayInfo() {
+            document.getElementById('SiteTitle').innerHTML = Backend['title'];
+            document.getElementById('SiteBanner').innerHTML = Backend['banner'];
+        }
+    </script>
+</head>
+
+<body>
+    <!-- 主容器 -->
+    <div class="mdui-container">
+        <!-- 顶部卡片 -->
+        <div class="mdui-card mdui-m-t-2" id="AuthCard">
+            <!-- 标题 -->
+            <div class="mdui-card-primary">
+                <div class="mdui-card-primary-title" id="SiteTitle"></div>
+                <div class="mdui-card-primary-subtitle" id="SiteBanner"></div>
+            </div>
+        </div>
+        <!-- 优惠码 -->
+        <div class="mdui-table-fluid mdui-card mdui-m-t-1">
+            <table class="mdui-table">
+                <thead>
+                    <tr>
+                        <th>名称</th>
+                        <th>折扣</th>
+                        <th>优惠码</th>
+                        <th>应用折扣</th>
+                    </tr>
+                </thead>
+                <tbody id="PromoCode">
+                </tbody>
+            </table>
+        </div>
+        <!-- AFF 表格 -->
+        <div class="mdui-table-fluid mdui-card mdui-m-t-1">
+            <table class="mdui-table">
+                <thead>
+                    <tr>
+                        <th>名称</th>
+                        <th>CPU</th>
+                        <th>RAM</th>
+                        <th>硬盘</th>
+                        <th>流量</th>
+                        <th>带宽</th>
+                        <th>原价</th>
+                        <th>折后</th>
+                        <th>库存</th>
+                        <th>购买链接</th>
+                    </tr>
+                </thead>
+                <tbody id="MainPrice">
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <script>
+        var Backend = null;
+        var Disc = null;
+        var PromoCode = document.getElementById('PromoCode');
+        var MainPrice = document.getElementById('MainPrice');
+        var HttpRequest = new XMLHttpRequest();
+        HttpRequest.open('GET', 'https://website.com/dev/bwg.php');
+        HttpRequest.send();
+        HttpRequest.onreadystatechange = function () {
+            if (HttpRequest.readyState != 4) { return; }
+            if (HttpRequest.status != 200) {
+                mdui.snackbar({ message: '库存加载失败', position: 'top' });
+                return;
+            }
+            Backend = JSON.parse(HttpRequest.responseText);
+            // 默认为 API 中第一个优惠码的折扣
+            Disc = Backend['promo'][0]['discount'];
+            DisplayHeader();
+            DisplayContent();
+            DisplayInfo();
+        }
+    </script>
+</body>
+
+</html>
