@@ -94,6 +94,7 @@ for ($i=1; $i<=$plan_count; $i++) {
     $tmp=str_replace(' ECOMMERCE','-E',$tmp);
     $tmp=str_replace('LIMITED EDITION','限量版',$tmp);
     $tmp=str_replace('JAPAN','日本(软银)',$tmp); # SPECIAL 10G KVM PROMO V5 - JAPAN LIMITED EDITION # 其实这个套餐已经下架了加不加这条无所谓吧...
+    $tmp=str_replace('SYDNEY','悉尼',$tmp);
     $tmp=str_replace('香港 85','香港 85 (CMI)',$tmp);
     $plan['name']=$tmp;
 
