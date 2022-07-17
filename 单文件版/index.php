@@ -10,18 +10,18 @@ https://github.com/yeyingorg/php_bwh_stock_checker
 
 # 搬瓦工相关
 $aff=31993; #aff号
-$bwh_domain="bwh88.net"; #搬瓦工域名，不带https://
+$bwh_domain="bwh81.net"; #点击跳转的搬瓦工域名，不带https://
 
 $promo_code="BWH3HYATVBJW"; #优惠码
 $promo_percentage="6.58%"; #优惠码百分比(带%)
 
-$special_promo_code="BWHNY2022"; #节日优惠码
-$special_promo_percentage="12.22%"; #节日优惠码百分比(带%)
+$special_promo_code=""; #节日优惠码 没有则不填
+$special_promo_percentage=""; #节日优惠码百分比(带%)
 
 # 网站相关
 $site_title="搬瓦工全方案 即时库存检测";
 $site_since_year="2018";
-$say_something="本站已于2022年1月16日更新啦...(失踪人士回归)";
+$say_something="<a href=\"https://github.com/yeyingorg/php_bwh_stock_checker\" target=\"_blank\">点此获取本页面源码</a>";
 
 // ---------- 配置部分结束 ----------
 
@@ -63,7 +63,7 @@ height:50px;
 <body style="width: 99%; font-size: 20px;">
 
 <?php
-$cart = file_get_contents("https://bwh88.net/cart.php"); # 此处不可使用bwh81.net，会出错！建议国外vps使用bandwagonhost.com
+$cart = file_get_contents("https://bwh88.net/cart.php"); # 此处不可使用bwh81.net，会出错！建议国外vps使用bandwagonhost.com，国内vps使用bwh88.net
 
 $tmp=strstr($cart, '<div class="cartbox">');
 $tmp=explode('<p align="center">',$tmp);
@@ -90,9 +90,11 @@ for ($i=1; $i<=$plan_count; $i++) {
     $tmp=str_replace('- HIBW','大流量',$tmp);
     $tmp=str_replace('HONG KONG','香港',$tmp);
     $tmp=str_replace('TOKYO','东京',$tmp);
+    $tmp=str_replace('DUBAI - ECOMMERCE','杜拜',$tmp);
     $tmp=str_replace(' ECOMMERCE','-E',$tmp);
     $tmp=str_replace('LIMITED EDITION','限量版',$tmp);
     $tmp=str_replace('JAPAN','日本(软银)',$tmp); # SPECIAL 10G KVM PROMO V5 - JAPAN LIMITED EDITION # 其实这个套餐已经下架了加不加这条无所谓吧...
+    $tmp=str_replace('香港 85','香港 85 (CMI)',$tmp);
     $plan['name']=$tmp;
 
     #ssd
@@ -167,7 +169,7 @@ for ($i=1; $i<=$plan_count; $i++) {
     $plan['pricing']=$tmp;
 
     #pid
-    if (strpos($cart_explode[$i],"/cart.php?a=add&pid=") !== false) {
+    if (strpos($cart_explode[$i],"/cart.php?a=add&pid=") != false) {
         $tmp=explode('/cart.php?a=add&pid=',$cart_explode[$i]);
         $tmp=explode("'",$tmp[1]);
         $tmp=$tmp[0];
@@ -198,7 +200,7 @@ for ($i=1; $i<=$plan_count; $i++) {
 
             $tmp=$plan['pricing'];
 
-            if (strpos($plan['pricing'],"<br />") !== false) {
+            if (strpos($plan['pricing'],"<br />") != false) {
                 $tmp=explode('<br />',$tmp);
 
                 $tmp[0]=str_replace('$','',$tmp[0]);
@@ -230,45 +232,58 @@ for ($i=1; $i<=$plan_count; $i++) {
 }
 
 $plans_limited_edition=array();
-$plans_tokyo=array();
 $plans_hk=array();
+$plans_tokyo=array();
+$plans_dubai=array();
 $plans_cn2_gia=array();
 $plans_cn2=array();
 $plans_general=array();
+$plans_others=array();
 
 foreach ($plans as $i => $plan){
-    if (strpos($plan['name'],"限量版") !== false) {
+    if (strpos($plan['name'],"限量版") != false) {
         $plans_limited_edition[]=$plan;
     }
 }
 foreach ($plans as $i => $plan){
-    if (strpos($plan['name'],"东京") !== false) {
-        $plans_tokyo[]=$plan;
-        unset($plans[$i]);
-    }
-}
-foreach ($plans as $i => $plan){
-    if (strpos($plan['name'],"香港") !== false) {
+    if (strpos($plan['name'],"香港") != false) {
         $plans_hk[]=$plan;
         unset($plans[$i]);
     }
 }
 foreach ($plans as $i => $plan){
-    if (strpos($plan['name'],"CN2 GIA") !== false || strpos($plan['name'],"CN2 GIA-E") !== false) {
+    if (strpos($plan['name'],"东京") != false) {
+        $plans_tokyo[]=$plan;
+        unset($plans[$i]);
+    }
+}
+foreach ($plans as $i => $plan){
+    if (strpos($plan['name'],"杜拜") != false) {
+        $plans_dubai[]=$plan;
+        unset($plans[$i]);
+    }
+}
+foreach ($plans as $i => $plan){
+    if (strpos($plan['name'],"CN2 GIA") != false || strpos($plan['name'],"CN2 GIA-E") != false) {
         $plans_cn2_gia[]=$plan;
         unset($plans[$i]);
     }
 }
 foreach ($plans as $i => $plan){
-    if (strpos($plan['name'],"CN2") !== false) {
+    if (strpos($plan['name'],"CN2") != false) {
         $plans_cn2[]=$plan;
         unset($plans[$i]);
     }
 }
 foreach ($plans as $i => $plan){
-    $plans_general[]=$plan;
-    unset($plans[$i]);
+    if (substr($plan['name'], -1) == "G") {
+        $plans_general[]=$plan;
+        unset($plans[$i]);
+    }
 }
+
+$plans_others[]=$plan;
+unset($plan);
 
 $plans_cheapest=array();
 $plans_cheapest[]=$plans_general[0];
@@ -276,6 +291,7 @@ $plans_cheapest[]=$plans_cn2[0];
 $plans_cheapest[]=$plans_cn2_gia[0];
 $plans_cheapest[]=$plans_hk[0];
 $plans_cheapest[]=$plans_tokyo[0];
+$plans_cheapest[]=$plans_dubai[0];
 
 ?>
 
@@ -306,46 +322,34 @@ if (!empty($special_promo_code) && !empty($special_promo_percentage)) {
     }
 }?></p>
 <table width="95%" id="border" border="0" cellspacing="0" align="center" style="text-align: center;">
-<tr style="font-weight: bold;"><td><span id="plans_limited_edition" style="color: red;">限量版</span>|<a href="#plans_cheapest">最便宜</a>|<a href="#plans_general">普通</a>|<a href="#plans_cn2">CN2</a>|<a href="#plans_cn2_gia">GIA</a>|<a href="#plans_hk">香港</a>|<a href="#plans_tokyo">东京</a></td><td>SSD</td><td>RAM</td><td>CPU</td><td>月流量</td><td>端口</td><td>价格</td><td>购买链接</td><td>库存</td></tr>
 <?php
-foreach ($plans_limited_edition as $i => $plan){
-    echo '<tr><td>' . $plan['name'] . '</td><td>' . $plan['ssd'] . '</td><td>' . $plan['ram'] . '</td><td>' . $plan['cpu'] . '</td><td>' . $plan['transfer'] . '</td><td>' . $plan['linkspeed'] . '</td><td>' . $plan['pricing'] . '</td><td>' . $plan['link'] . '</td><td>' . $plan['stock'] . '</td></tr>';
-}
-?>
-<tr style="font-weight: bold;"><td><a href="#plans_limited_edition">限量版</a>|<span id="plans_cheapest" style="color: red;">最便宜</span>|<a href="#plans_general">普通</a>|<a href="#plans_cn2">CN2</a>|<a href="#plans_cn2_gia">GIA</a>|<a href="#plans_hk">香港</a>|<a href="#plans_tokyo">东京</a></td><td>SSD</td><td>RAM</td><td>CPU</td><td>月流量</td><td>端口</td><td>价格</td><td>购买链接</td><td>库存</td></tr>
-<?php
-foreach ($plans_cheapest as $i => $plan){
-    echo '<tr><td style="text-align: left;">' . $plan['name'] . '</td><td>' . $plan['ssd'] . '</td><td>' . $plan['ram'] . '</td><td>' . $plan['cpu'] . '</td><td>' . $plan['transfer'] . '</td><td>' . $plan['linkspeed'] . '</td><td>' . $plan['pricing'] . '</td><td>' . $plan['link'] . '</td><td>' . $plan['stock'] . '</td></tr>';
-}
-?>
-<tr style="font-weight: bold;"><td><a href="#plans_limited_edition">限量版</a>|<a href="#plans_cheapest">最便宜</a>|<span id="plans_general" style="color: red;">普通</span>|<a href="#plans_cn2">CN2</a>|<a href="#plans_cn2_gia">GIA</a>|<a href="#plans_hk">香港</a>|<a href="#plans_tokyo">东京</a></td><td>SSD</td><td>RAM</td><td>CPU</td><td>月流量</td><td>端口</td><td>价格</td><td>购买链接</td><td>库存</td></tr>
-<?php
-foreach ($plans_general as $i => $plan){
-    echo '<tr><td>' . $plan['name'] . '</td><td>' . $plan['ssd'] . '</td><td>' . $plan['ram'] . '</td><td>' . $plan['cpu'] . '</td><td>' . $plan['transfer'] . '</td><td>' . $plan['linkspeed'] . '</td><td>' . $plan['pricing'] . '</td><td>' . $plan['link'] . '</td><td>' . $plan['stock'] . '</td></tr>';
-}
-?>
-<tr style="font-weight: bold;"><td><a href="#plans_limited_edition">限量版</a>|<a href="#plans_cheapest">最便宜</a>|<a href="#plans_general">普通</a>|<span id="plans_cn2" style="color: red;">CN2</span>|<a href="#plans_cn2_gia">GIA</a>|<a href="#plans_hk">香港</a>|<a href="#plans_tokyo">东京</a></td><td>SSD</td><td>RAM</td><td>CPU</td><td>月流量</td><td>端口</td><td>价格</td><td>购买链接</td><td>库存</td></tr>
-<?php
-foreach ($plans_cn2 as $i => $plan){
-    echo '<tr><td>' . $plan['name'] . '</td><td>' . $plan['ssd'] . '</td><td>' . $plan['ram'] . '</td><td>' . $plan['cpu'] . '</td><td>' . $plan['transfer'] . '</td><td>' . $plan['linkspeed'] . '</td><td>' . $plan['pricing'] . '</td><td>' . $plan['link'] . '</td><td>' . $plan['stock'] . '</td></tr>';
-}
-?>
-<tr style="font-weight: bold;"><td><a href="#plans_limited_edition">限量版</a>|<a href="#plans_cheapest">最便宜</a>|<a href="#plans_general">普通</a>|<a href="#plans_cn2">CN2</a>|<span id="plans_cn2_gia" style="color: red;">GIA</span>|<a href="#plans_hk">香港</a>|<a href="#plans_tokyo">东京</a></td><td>SSD</td><td>RAM</td><td>CPU</td><td>月流量</td><td>端口</td><td>价格</td><td>购买链接</td><td>库存</td></tr>
-<?php
-foreach ($plans_cn2_gia as $i => $plan){
-    echo '<tr><td>' . $plan['name'] . '</td><td>' . $plan['ssd'] . '</td><td>' . $plan['ram'] . '</td><td>' . $plan['cpu'] . '</td><td>' . $plan['transfer'] . '</td><td>' . $plan['linkspeed'] . '</td><td>' . $plan['pricing'] . '</td><td>' . $plan['link'] . '</td><td>' . $plan['stock'] . '</td></tr>';
-}
-?>
-<tr style="font-weight: bold;"><td><a href="#plans_limited_edition">限量版</a>|<a href="#plans_cheapest">最便宜</a>|<a href="#plans_general">普通</a>|<a href="#plans_cn2">CN2</a>|<a href="#plans_cn2_gia">GIA</a>|<span id="plans_hk" style="color: red;">香港</span>|<a href="#plans_tokyo">东京</a></td><td>SSD</td><td>RAM</td><td>CPU</td><td>月流量</td><td>端口</td><td>价格</td><td>购买链接</td><td>库存</td></tr>
-<?php
-foreach ($plans_hk as $i => $plan){
-    echo '<tr><td>' . $plan['name'] . '</td><td>' . $plan['ssd'] . '</td><td>' . $plan['ram'] . '</td><td>' . $plan['cpu'] . '</td><td>' . $plan['transfer'] . '</td><td>' . $plan['linkspeed'] . '</td><td>' . $plan['pricing'] . '</td><td>' . $plan['link'] . '</td><td>' . $plan['stock'] . '</td></tr>';
-}
-?>
-<tr style="font-weight: bold;"><td><a href="#plans_limited_edition">限量版</a>|<a href="#plans_cheapest">最便宜</a>|<a href="#plans_general">普通</a>|<a href="#plans_cn2">CN2</a>|<a href="#plans_cn2_gia">GIA</a>|<a href="#plans_hk">香港</a>|<span id="plans_tokyo" style="color: red;">东京</span></td><td>SSD</td><td>RAM</td><td>CPU</td><td>月流量</td><td>端口</td><td>价格</td><td>购买链接</td><td>库存</td></tr>
-<?php
-foreach ($plans_tokyo as $i => $plan){
-    echo '<tr><td>' . $plan['name'] . '</td><td>' . $plan['ssd'] . '</td><td>' . $plan['ram'] . '</td><td>' . $plan['cpu'] . '</td><td>' . $plan['transfer'] . '</td><td>' . $plan['linkspeed'] . '</td><td>' . $plan['pricing'] . '</td><td>' . $plan['link'] . '</td><td>' . $plan['stock'] . '</td></tr>';
+$tr_dict = [
+    "limited_edition" => "限量版",
+    "cheapest" => "最便宜",
+    "general" => "普通",
+    "cn2" => "CN2",
+    "cn2_gia" => "GIA",
+    "hk" => "香港",
+    "tokyo" => "东京",
+    "dubai" => "杜拜",
+    "others" => "其他",
+];
+foreach ( array_keys($tr_dict) as $e ) {
+    echo '<tr style="font-weight: bold;"><td>';
+    foreach ($tr_dict as $k => $v){
+        if ( $e == $k ) {
+            echo "<span id=\"plans_${k}\" style=\"color: red;\">${v}</span>";
+        } else {
+            echo "<a href=\"#plans_${k}\">${v}</a>";
+        }
+        if ( $k != end(array_keys($tr_dict)) ) {
+            echo "|";
+        }
+    }
+    echo "</td><td>SSD</td><td>RAM</td><td>CPU</td><td>月流量</td><td>端口</td><td>价格</td><td>购买链接</td><td>库存</td></tr>";   
+    foreach (${"plans_" . $e} as $plan){
+        echo '<tr><td>' . $plan['name'] . '</td><td>' . $plan['ssd'] . '</td><td>' . $plan['ram'] . '</td><td>' . $plan['cpu'] . '</td><td>' . $plan['transfer'] . '</td><td>' . $plan['linkspeed'] . '</td><td>' . $plan['pricing'] . '</td><td>' . $plan['link'] . '</td><td>' . $plan['stock'] . '</td></tr>';
+    }
 }
 ?>
 </table>
