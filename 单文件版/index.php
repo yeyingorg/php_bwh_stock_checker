@@ -12,8 +12,8 @@ https://github.com/yeyingorg/php_bwh_stock_checker
 $aff=31993; #aff号
 $bwh_domain="bwh81.net"; #点击跳转的搬瓦工域名，不带https://
 
-$promo_code="BWH3HYATVBJW"; #优惠码
-$promo_percentage="6.58%"; #优惠码百分比(带%)
+$promo_code="BWHNCXNVXV"; #优惠码
+$promo_percentage="6.81%"; #优惠码百分比(带%)
 
 $special_promo_code=""; #节日优惠码 没有则不填
 $special_promo_percentage=""; #节日优惠码百分比(带%)
@@ -100,7 +100,7 @@ for ($i=1; $i<=$plan_count; $i++) {
 
     #ssd
     $tmp=explode('SSD: ',$cart_explode[$i]);
-    $tmp=explode('<br />',$tmp[1]);
+    $tmp=explode('<br/>',$tmp[1]);
     $tmp=$tmp[0];
     $tmp=str_replace(' RAID-10','',$tmp);
     $tmp=str_replace(' GB','GB',$tmp); #fix
@@ -109,7 +109,7 @@ for ($i=1; $i<=$plan_count; $i++) {
 
     #ram
     $tmp=explode('RAM: ',$cart_explode[$i]);
-    $tmp=explode('<br />',$tmp[1]);
+    $tmp=explode('<br/>',$tmp[1]);
     $tmp=$tmp[0];
     #for ($x=1; $x<=64; $x*=2) { #convert
     #    $tmp=str_replace(1024*$x,$x,$tmp);
@@ -122,14 +122,14 @@ for ($i=1; $i<=$plan_count; $i++) {
 
     #cpu
     $tmp=explode('CPU: ',$cart_explode[$i]);
-    $tmp=explode('<br />',$tmp[1]);
+    $tmp=explode('<br/>',$tmp[1]);
     $tmp=$tmp[0];
     $tmp=str_replace(' Intel Xeon','',$tmp);
     $plan['cpu']=$tmp;
 
     #transfer
     $tmp=explode('Transfer: ',$cart_explode[$i]);
-    $tmp=explode('<br />',$tmp[1]);
+    $tmp=explode('<br/>',$tmp[1]);
     $tmp=$tmp[0];
     $tmp=str_replace('/mo','',$tmp);
     for ($x=1; $x<=16; $x++) { #convert
@@ -141,14 +141,14 @@ for ($i=1; $i<=$plan_count; $i++) {
 
     #linkspeed
     $tmp=explode('Link speed: ',$cart_explode[$i]);
-    $tmp=explode('<br />',$tmp[1]);
+    $tmp=explode('<br/>',$tmp[1]);
     $tmp=$tmp[0];
     $tmp=str_replace('Gigabit','Gb',$tmp);
     $plan['linkspeed']=$tmp;
 
     #pricing
     $tmp=explode('pricing textcenter"> ',$cart_explode[$i]);
-    $tmp=explode("<br />\n</td>",$tmp[1]);
+    $tmp=explode("<br/>\n</td>",$tmp[1]);
     $tmp=$tmp[0];
     $tmp=str_replace(' ','',$tmp);
     $tmp=str_replace("\n",'',$tmp);
@@ -201,8 +201,8 @@ for ($i=1; $i<=$plan_count; $i++) {
 
             $tmp=$plan['pricing'];
 
-            if (strpos($plan['pricing'],"<br />") != false) {
-                $tmp=explode('<br />',$tmp);
+            if (strpos($plan['pricing'],"<br/>") != false) {
+                $tmp=explode('<br/>',$tmp);
 
                 $tmp[0]=str_replace('$','',$tmp[0]);
                 $tmp[1]=str_replace('$','',$tmp[1]);
