@@ -283,8 +283,8 @@ foreach ($plans as $i => $plan){
     }
 }
 
-$plans_others[]=$plans;
-unset($plans);
+$plans_others[]=$plan;
+unset($plan);
 
 $plans_cheapest=array();
 $plans_cheapest[]=$plans_general[0];
