@@ -1,7 +1,7 @@
 <?php
 
 /*
-搬瓦工自动即时库存检测
+PHP搬瓦工即时库存检测aff站
 作者: 夜桜
 https://github.com/yeyingorg/php_bwh_stock_checker
 */
@@ -26,7 +26,36 @@ if (is_numeric($get_id)) {
     exit;
 }
 
-$cart = file_get_contents("https://bwh88.net/cart.php"); # 此处不可使用bwh81.net，会出错！建议国外vps使用bandwagonhost.com
+if ( $instant_mode ) {
+    $cart = file_get_contents($cart_fetch_url);
+} else {
+
+    if ( is_file($cart_filename) ) { 
+        $cart = null;
+        if ( ( time() - filemtime($cart_filename) ) > $expire ) {
+            $cart = file_get_contents($cart_fetch_url);
+            if ( !empty($cart) ) {
+                unlink($cart_filename);
+                $file_cart = fopen($cart_filename, "w");
+                fwrite($file_cart, $cart);
+                fclose($file_cart);
+            } 
+        }
+        if ( empty($cart) ) {
+            $file_cart = fopen($cart_filename, "r");
+            $cart = fread($file_cart, filesize($cart_filename));
+            fclose($file_cart);
+        }
+    } else {
+        $cart = file_get_contents($cart_fetch_url);
+        if ( !empty($cart) ) {
+            $file_cart = fopen($cart_filename, "w");
+            fwrite($file_cart, $cart);
+            fclose($file_cart);
+        }
+    }
+
+}
 
 $tmp=strstr($cart, '<div class="cartbox">');
 $tmp=explode('<p align="center">',$tmp);
@@ -40,7 +69,7 @@ $plans=array();
 
 for ($i=1; $i<=$plan_count; $i++) {
 
-    #name
+    # name
     $tmp=explode('<nobr>',$cart_explode[$i]);
     $tmp=explode('</nobr>',$tmp[1]);
     $tmp=$tmp[0];
@@ -53,62 +82,65 @@ for ($i=1; $i<=$plan_count; $i++) {
     $tmp=str_replace('- HIBW','大流量',$tmp);
     $tmp=str_replace('HONG KONG','香港',$tmp);
     $tmp=str_replace('TOKYO','东京',$tmp);
+    $tmp=str_replace('DUBAI - ECOMMERCE','杜拜',$tmp);
     $tmp=str_replace(' ECOMMERCE','-E',$tmp);
     $tmp=str_replace('LIMITED EDITION','限量版',$tmp);
-    $tmp=str_replace('JAPAN','日本(软银)',$tmp); # SPECIAL 10G KVM PROMO V5 - JAPAN LIMITED EDITION # 其实这个套餐已经下架了加不加这条无所谓吧...
+    $tmp=str_replace('JAPAN','日本(软银)',$tmp); # SPECIAL 10G KVM PROMO V5 - JAPAN LIMITED EDITION # 该套餐已下架...
+    $tmp=str_replace('SYDNEY','悉尼',$tmp);
+    $tmp=str_replace('香港 85','香港 85 (CMI)',$tmp);
     $plan['name']=$tmp;
 
-    #ssd
+    # ssd
     $tmp=explode('SSD: ',$cart_explode[$i]);
-    $tmp=explode('<br />',$tmp[1]);
+    $tmp=explode('<br/>',$tmp[1]);
     $tmp=$tmp[0];
     $tmp=str_replace(' RAID-10','',$tmp);
-    $tmp=str_replace(' GB','GB',$tmp); #fix
-    $tmp=str_replace('GB',' GB',$tmp); #fix
+    $tmp=str_replace(' GB','GB',$tmp); # fix
+    $tmp=str_replace('GB',' GB',$tmp); # fix
     $plan['ssd']=$tmp;
 
-    #ram
+    # ram
     $tmp=explode('RAM: ',$cart_explode[$i]);
-    $tmp=explode('<br />',$tmp[1]);
+    $tmp=explode('<br/>',$tmp[1]);
     $tmp=$tmp[0];
-    #for ($x=1; $x<=64; $x*=2) { #convert
-    #    $tmp=str_replace(1024*$x,$x,$tmp);
-    #}
-    for ($x=1; $x<=64; $x++) { #convert
+    /*for ($x=1; $x<=64; $x*=2) { # convert
+        $tmp=str_replace(1024*$x,$x,$tmp);
+    }*/
+    for ($x=1; $x<=64; $x++) { # convert
         $tmp=str_replace(1024*$x,$x,$tmp);
     }
-    $tmp=str_replace('MB','GB',$tmp); #convert
+    $tmp=str_replace('MB','GB',$tmp); # convert
     $plan['ram']=$tmp;
 
-    #cpu
+    # cpu
     $tmp=explode('CPU: ',$cart_explode[$i]);
-    $tmp=explode('<br />',$tmp[1]);
+    $tmp=explode('<br/>',$tmp[1]);
     $tmp=$tmp[0];
     $tmp=str_replace(' Intel Xeon','',$tmp);
     $plan['cpu']=$tmp;
 
-    #transfer
+    # transfer
     $tmp=explode('Transfer: ',$cart_explode[$i]);
-    $tmp=explode('<br />',$tmp[1]);
+    $tmp=explode('<br/>',$tmp[1]);
     $tmp=$tmp[0];
     $tmp=str_replace('/mo','',$tmp);
-    for ($x=1; $x<=16; $x++) { #convert
+    for ($x=1; $x<=16; $x++) { # convert
         $tmp=str_replace(1000*$x,$x,$tmp);
     }
-    $tmp=str_replace('500','0.5',$tmp); #convert
-    $tmp=str_replace('GB','TB',$tmp); #convert
+    $tmp=str_replace('500','0.5',$tmp); # convert
+    $tmp=str_replace('GB','TB',$tmp); # convert
     $plan['transfer']=$tmp;
 
-    #linkspeed
+    # linkspeed
     $tmp=explode('Link speed: ',$cart_explode[$i]);
-    $tmp=explode('<br />',$tmp[1]);
+    $tmp=explode('<br/>',$tmp[1]);
     $tmp=$tmp[0];
     $tmp=str_replace('Gigabit','Gb',$tmp);
     $plan['linkspeed']=$tmp;
 
-    #pricing
+    # pricing
     $tmp=explode('pricing textcenter"> ',$cart_explode[$i]);
-    $tmp=explode("<br />\n</td>",$tmp[1]);
+    $tmp=explode("<br/>\n</td>",$tmp[1]);
     $tmp=$tmp[0];
     $tmp=str_replace(' ','',$tmp);
     $tmp=str_replace("\n",'',$tmp);
@@ -134,7 +166,7 @@ for ($i=1; $i<=$plan_count; $i++) {
         array_push($plan['pricing'], ['cycle'=>$tmp2[1],'pricing'=>floatval($tmp2[0])]);
     }
 
-    #pid
+    # pid
     if (strpos($cart_explode[$i],"/cart.php?a=add&pid=") !== false) {
         $tmp=explode('/cart.php?a=add&pid=',$cart_explode[$i]);
         $tmp=explode("'",$tmp[1]);
@@ -142,7 +174,7 @@ for ($i=1; $i<=$plan_count; $i++) {
         $pid=$tmp;
     }
 
-    #link and stock
+    # link and stock
     if (empty($pid)) {
         $plan['link']=null;
         $plan['stock']=false;
