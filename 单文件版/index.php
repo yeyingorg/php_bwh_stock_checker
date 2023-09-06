@@ -336,15 +336,21 @@ $tr_dict = [
     "others" => "其他",
 ];
 foreach ( array_keys($tr_dict) as $e ) {
+    if ( $e == "others" && empty($plans_others) ) {
+        continue;
+    }
     echo '<tr style="font-weight: bold;"><td>';
     foreach ($tr_dict as $k => $v){
-        if ( $e == $k ) {
-            echo "<span id=\"plans_${k}\" style=\"color: red;\">${v}</span>";
-        } else {
-            echo "<a href=\"#plans_${k}\">${v}</a>";
+        if ( $k == "others" && empty($plans_others) ) {
+            continue;
         }
-        if ( $k != end(array_keys($tr_dict)) ) {
+        if ( $k != array_key_first($tr_dict) ) {
             echo "|";
+        }
+        if ( $e == $k ) {
+            echo "<span id=\"plans_{$k}\" style=\"color: red;\">{$v}</span>";
+        } else {
+            echo "<a href=\"#plans_{$k}\">{$v}</a>";
         }
     }
     echo "</td><td>SSD</td><td>RAM</td><td>CPU</td><td>月流量</td><td>端口</td><td>价格</td><td>购买链接</td><td>库存</td></tr>";   
