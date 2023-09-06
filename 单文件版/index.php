@@ -170,7 +170,7 @@ for ($i=1; $i<=$plan_count; $i++) {
     $plan['pricing']=$tmp;
 
     #pid
-    if (strpos($cart_explode[$i],"/cart.php?a=add&pid=") != false) {
+    if (strpos($cart_explode[$i],"/cart.php?a=add&pid=") !== false) {
         $tmp=explode('/cart.php?a=add&pid=',$cart_explode[$i]);
         $tmp=explode("'",$tmp[1]);
         $tmp=$tmp[0];
@@ -201,7 +201,7 @@ for ($i=1; $i<=$plan_count; $i++) {
 
             $tmp=$plan['pricing'];
 
-            if (strpos($plan['pricing'],"<br/>") != false) {
+            if (strpos($plan['pricing'],"<br/>") !== false) {
                 $tmp=explode('<br/>',$tmp);
 
                 $tmp[0]=str_replace('$','',$tmp[0]);
@@ -242,36 +242,36 @@ $plans_general=array();
 $plans_others=array();
 
 foreach ($plans as $i => $plan){
-    if (strpos($plan['name'],"限量版") != false) {
+    if (strpos($plan['name'],"限量版") !== false) {
         $plans_limited_edition[]=$plan;
     }
 }
 foreach ($plans as $i => $plan){
-    if (strpos($plan['name'],"香港") != false) {
+    if (strpos($plan['name'],"香港") !== false) {
         $plans_hk[]=$plan;
         unset($plans[$i]);
     }
 }
 foreach ($plans as $i => $plan){
-    if (strpos($plan['name'],"东京") != false) {
+    if (strpos($plan['name'],"东京") !== false) {
         $plans_tokyo[]=$plan;
         unset($plans[$i]);
     }
 }
 foreach ($plans as $i => $plan){
-    if (strpos($plan['name'],"杜拜") != false) {
+    if (strpos($plan['name'],"杜拜") !== false) {
         $plans_dubai[]=$plan;
         unset($plans[$i]);
     }
 }
 foreach ($plans as $i => $plan){
-    if (strpos($plan['name'],"CN2 GIA") != false || strpos($plan['name'],"CN2 GIA-E") != false) {
+    if (strpos($plan['name'],"CN2 GIA") !== false || strpos($plan['name'],"CN2 GIA-E") !== false) {
         $plans_cn2_gia[]=$plan;
         unset($plans[$i]);
     }
 }
 foreach ($plans as $i => $plan){
-    if (strpos($plan['name'],"CN2") != false) {
+    if (strpos($plan['name'],"CN2") !== false) {
         $plans_cn2[]=$plan;
         unset($plans[$i]);
     }
