@@ -370,14 +370,13 @@ $tr_dict = [
     "others" => "其他",
 ];
 foreach ( array_keys($tr_dict) as $e ) {
-    if ( $e == "others" && empty($plans_others) ) {
-        continue;
+    if ( empty(${"plans_" . $e}) ) {
+        unset($tr_dict[$e]);
     }
+}
+foreach ( array_keys($tr_dict) as $e ) {
     echo '<tr style="font-weight: bold;"><td>';
     foreach ($tr_dict as $k => $v){
-        if ( $k == "others" && empty($plans_others) ) {
-            continue;
-        }
         if ( $k != array_key_first($tr_dict) ) {
             echo "|";
         }
