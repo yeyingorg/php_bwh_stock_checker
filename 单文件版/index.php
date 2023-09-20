@@ -124,10 +124,11 @@ for ($i=1; $i<=$plan_count; $i++) {
     $tmp=str_replace('- HIBW','大流量',$tmp);
     $tmp=str_replace('HONG KONG','香港',$tmp);
     $tmp=str_replace('TOKYO','东京',$tmp);
+    $tmp=str_replace('OSAKA','大阪',$tmp);
     $tmp=str_replace('DUBAI - ECOMMERCE','杜拜',$tmp);
     $tmp=str_replace(' ECOMMERCE','-E',$tmp);
     $tmp=str_replace('LIMITED EDITION','限量版',$tmp);
-    $tmp=str_replace('JAPAN','日本(软银)',$tmp); # SPECIAL 10G KVM PROMO V5 - JAPAN LIMITED EDITION # 该套餐已下架...
+    $tmp=str_replace('JAPAN','日本 (软银)',$tmp); # SPECIAL 10G KVM PROMO V5 - JAPAN LIMITED EDITION # 该套餐已下架...
     $tmp=str_replace('SYDNEY','悉尼',$tmp);
     $tmp=str_replace('香港 85','香港 85 (CMI)',$tmp);
     $plan['name']=$tmp;
@@ -269,6 +270,7 @@ for ($i=1; $i<=$plan_count; $i++) {
 $plans_limited_edition=array();
 $plans_hk=array();
 $plans_tokyo=array();
+$plans_osaka=array();
 $plans_dubai=array();
 $plans_cn2_gia=array();
 $plans_cn2=array();
@@ -293,13 +295,19 @@ foreach ($plans as $i => $plan){
     }
 }
 foreach ($plans as $i => $plan){
+    if (strpos($plan['name'],"大阪") !== false) {
+        $plans_osaka[]=$plan;
+        unset($plans[$i]);
+    }
+}
+foreach ($plans as $i => $plan){
     if (strpos($plan['name'],"杜拜") !== false) {
         $plans_dubai[]=$plan;
         unset($plans[$i]);
     }
 }
 foreach ($plans as $i => $plan){
-    if (strpos($plan['name'],"CN2 GIA") !== false || strpos($plan['name'],"CN2 GIA-E") !== false) {
+    if (strpos($plan['name'],"CN2 GIA") !== false) {
         $plans_cn2_gia[]=$plan;
         unset($plans[$i]);
     }
@@ -326,6 +334,7 @@ $plans_cheapest[]=$plans_cn2[0];
 $plans_cheapest[]=$plans_cn2_gia[0];
 $plans_cheapest[]=$plans_hk[0];
 $plans_cheapest[]=$plans_tokyo[0];
+$plans_cheapest[]=$plans_osaka[0];
 $plans_cheapest[]=$plans_dubai[0];
 
 ?>
@@ -366,6 +375,7 @@ $tr_dict = [
     "cn2_gia" => "GIA",
     "hk" => "香港",
     "tokyo" => "东京",
+    "osaka" => "大阪",
     "dubai" => "杜拜",
     "others" => "其他",
 ];

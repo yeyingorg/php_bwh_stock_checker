@@ -82,10 +82,11 @@ for ($i=1; $i<=$plan_count; $i++) {
     $tmp=str_replace('- HIBW','大流量',$tmp);
     $tmp=str_replace('HONG KONG','香港',$tmp);
     $tmp=str_replace('TOKYO','东京',$tmp);
+    $tmp=str_replace('OSAKA','大阪',$tmp);
     $tmp=str_replace('DUBAI - ECOMMERCE','杜拜',$tmp);
     $tmp=str_replace(' ECOMMERCE','-E',$tmp);
     $tmp=str_replace('LIMITED EDITION','限量版',$tmp);
-    $tmp=str_replace('JAPAN','日本(软银)',$tmp); # SPECIAL 10G KVM PROMO V5 - JAPAN LIMITED EDITION # 该套餐已下架...
+    $tmp=str_replace('JAPAN','日本 (软银)',$tmp); # SPECIAL 10G KVM PROMO V5 - JAPAN LIMITED EDITION # 该套餐已下架...
     $tmp=str_replace('SYDNEY','悉尼',$tmp);
     $tmp=str_replace('香港 85','香港 85 (CMI)',$tmp);
     $plan['name']=$tmp;
