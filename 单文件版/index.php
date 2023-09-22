@@ -278,6 +278,11 @@ $plans_general=array();
 $plans_others=array();
 
 foreach ($plans as $i => $plan){
+    if (strpos($plan['name'],"FREEDOM PLAN") !== false) {
+        $plans_limited_edition[]=$plan;
+    }
+}
+foreach ($plans as $i => $plan){
     if (strpos($plan['name'],"限量版") !== false) {
         $plans_limited_edition[]=$plan;
     }
