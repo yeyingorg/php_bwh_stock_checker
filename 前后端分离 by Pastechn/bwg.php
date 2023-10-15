@@ -84,6 +84,7 @@ for ($i=1; $i<=$plan_count; $i++) {
     $tmp=str_replace('TOKYO','东京',$tmp);
     $tmp=str_replace('OSAKA','大阪',$tmp);
     $tmp=str_replace('DUBAI - ECOMMERCE','杜拜',$tmp);
+    $tmp=str_replace('DUBAI','杜拜',$tmp);
     $tmp=str_replace(' ECOMMERCE','-E',$tmp);
     $tmp=str_replace('LIMITED EDITION','限量版',$tmp);
     $tmp=str_replace('JAPAN','日本 (软银)',$tmp); # SPECIAL 10G KVM PROMO V5 - JAPAN LIMITED EDITION # 该套餐已下架...
@@ -96,28 +97,29 @@ for ($i=1; $i<=$plan_count; $i++) {
     $tmp=explode('<br/>',$tmp[1]);
     $tmp=$tmp[0];
     $tmp=str_replace(' RAID-10','',$tmp);
-    $tmp=str_replace(' GB','GB',$tmp); # fix
-    $tmp=str_replace('GB',' GB',$tmp); # fix
+    $tmp=str_replace('GB','',$tmp);
+    $tmp=trim($tmp) . " GB";
     $plan['ssd']=$tmp;
 
     # ram
     $tmp=explode('RAM: ',$cart_explode[$i]);
     $tmp=explode('<br/>',$tmp[1]);
     $tmp=$tmp[0];
-    /*for ($x=1; $x<=64; $x*=2) { # convert
-        $tmp=str_replace(1024*$x,$x,$tmp);
-    }*/
-    for ($x=1; $x<=64; $x++) { # convert
-        $tmp=str_replace(1024*$x,$x,$tmp);
+    if (strpos($tmp,'MB') !== false) {
+        $tmp=str_replace('MB','',$tmp);
+        $tmp=round(trim($tmp / 1024),2) . " GB";
+    } elseif (strpos($tmp,'GB') !== false) {
+        $tmp=str_replace('GB','',$tmp);
+        $tmp=trim($tmp) . " GB";
     }
-    $tmp=str_replace('MB','GB',$tmp); # convert
     $plan['ram']=$tmp;
 
     # cpu
     $tmp=explode('CPU: ',$cart_explode[$i]);
     $tmp=explode('<br/>',$tmp[1]);
     $tmp=$tmp[0];
-    $tmp=str_replace(' Intel Xeon','',$tmp);
+    $tmp=str_replace('Intel Xeon','',$tmp);
+    $tmp=trim($tmp);
     $plan['cpu']=$tmp;
 
     # transfer
@@ -125,11 +127,13 @@ for ($i=1; $i<=$plan_count; $i++) {
     $tmp=explode('<br/>',$tmp[1]);
     $tmp=$tmp[0];
     $tmp=str_replace('/mo','',$tmp);
-    for ($x=1; $x<=16; $x++) { # convert
-        $tmp=str_replace(1000*$x,$x,$tmp);
+    if (strpos($tmp,'GB') !== false) {
+        $tmp=str_replace('GB','',$tmp);
+        $tmp=round(trim($tmp / 1000),2) . " TB";
+    } elseif (strpos($tmp,'TB') !== false) {
+        $tmp=str_replace('TB','',$tmp);
+        $tmp=trim($tmp) . " TB";
     }
-    $tmp=str_replace('500','0.5',$tmp); # convert
-    $tmp=str_replace('GB','TB',$tmp); # convert
     $plan['transfer']=$tmp;
 
     # linkspeed
