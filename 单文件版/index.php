@@ -240,8 +240,8 @@ for ($i=1; $i<=$plan_count; $i++) {
 
             $tmp=$plan['pricing'];
 
-            if (strpos($plan['pricing'],"<br/>") !== false) {
-                $tmp=explode('<br/>',$tmp);
+            if (strpos($plan['pricing'],"<br />") !== false) {
+                $tmp=explode('<br />',$tmp);
 
                 $tmp[0]=str_replace('$','',$tmp[0]);
                 $tmp[1]=str_replace('$','',$tmp[1]);
