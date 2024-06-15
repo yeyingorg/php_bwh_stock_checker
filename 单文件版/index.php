@@ -12,8 +12,8 @@ https://github.com/yeyingorg/php_bwh_stock_checker
 $aff=31993; # aff号
 $bwh_domain="bwh81.net"; # 点击跳转的搬瓦工域名，不带https://
 
-$promo_code="BWHNCXNVXV"; # 优惠码
-$promo_percentage="6.81%"; # 优惠码百分比(带%)
+$promo_code="BWHCCNCXVV"; # 优惠码
+$promo_percentage="6.78%"; # 优惠码百分比(带%)
 
 $special_promo_code=""; # 节日优惠码 没有则不填
 $special_promo_percentage=""; # 节日优惠码百分比(带%)

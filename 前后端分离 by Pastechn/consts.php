@@ -5,8 +5,8 @@ $bwh_domain="bwh81.net"; # 搬瓦工域名，不带https://
 
 $promo_code = [
     [
-        'code' => 'BWHNCXNVXV',
-        'discount' => 6.81,
+        'code' => 'BWHCCNCXVV',
+        'discount' => 6.78,
         'name' => '优惠码'
     ]/*,
     [
