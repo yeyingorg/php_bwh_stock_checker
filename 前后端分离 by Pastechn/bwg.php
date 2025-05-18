@@ -94,7 +94,7 @@ for ($i=1; $i<=$plan_count; $i++) {
 
     # ssd
     $tmp=explode('SSD: ',$cart_explode[$i]);
-    $tmp=explode('<br/>',$tmp[1]);
+    $tmp=explode('<br />',$tmp[1]);
     $tmp=$tmp[0];
     $tmp=str_replace(' RAID-10','',$tmp);
     $tmp=str_replace('GB','',$tmp);
@@ -103,7 +103,7 @@ for ($i=1; $i<=$plan_count; $i++) {
 
     # ram
     $tmp=explode('RAM: ',$cart_explode[$i]);
-    $tmp=explode('<br/>',$tmp[1]);
+    $tmp=explode('<br />',$tmp[1]);
     $tmp=$tmp[0];
     if (strpos($tmp,'MB') !== false) {
         $tmp=str_replace('MB','',$tmp);
@@ -116,7 +116,7 @@ for ($i=1; $i<=$plan_count; $i++) {
 
     # cpu
     $tmp=explode('CPU: ',$cart_explode[$i]);
-    $tmp=explode('<br/>',$tmp[1]);
+    $tmp=explode('<br />',$tmp[1]);
     $tmp=$tmp[0];
     $tmp=str_replace('Intel Xeon','',$tmp);
     $tmp=trim($tmp);
@@ -124,7 +124,7 @@ for ($i=1; $i<=$plan_count; $i++) {
 
     # transfer
     $tmp=explode('Transfer: ',$cart_explode[$i]);
-    $tmp=explode('<br/>',$tmp[1]);
+    $tmp=explode('<br />',$tmp[1]);
     $tmp=$tmp[0];
     $tmp=str_replace('/mo','',$tmp);
     if (strpos($tmp,'GB') !== false) {
@@ -138,14 +138,14 @@ for ($i=1; $i<=$plan_count; $i++) {
 
     # linkspeed
     $tmp=explode('Link speed: ',$cart_explode[$i]);
-    $tmp=explode('<br/>',$tmp[1]);
+    $tmp=explode('<br />',$tmp[1]);
     $tmp=$tmp[0];
     $tmp=str_replace('Gigabit','Gb',$tmp);
     $plan['linkspeed']=$tmp;
 
     # pricing
     $tmp=explode('pricing textcenter"> ',$cart_explode[$i]);
-    $tmp=explode("<br/>\n</td>",$tmp[1]);
+    $tmp=explode("</td>",$tmp[1]);
     $tmp=$tmp[0];
     $tmp=str_replace(' ','',$tmp);
     $tmp=str_replace("\n",'',$tmp);
@@ -155,7 +155,8 @@ for ($i=1; $i<=$plan_count; $i++) {
     $tmp=str_replace('Semi-Annually','/半年',$tmp);
     $tmp=str_replace('Annually','/年',$tmp);
     $tmp=str_replace('$','',$tmp);
-    $tmp=explode('<br/>',$tmp);
+    $tmp=substr($tmp,0,-5);
+    $tmp=explode('<br />',$tmp);
     if (count($tmp) == 1) {
         $tmp = array($tmp[0]);
     } elseif (count($tmp) == 2) {
