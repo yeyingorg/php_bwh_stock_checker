@@ -156,7 +156,7 @@ for ($i=1; $i<=$plan_count; $i++) {
     $tmp=str_replace('Annually','/年',$tmp);
     $tmp=str_replace('$','',$tmp);
     $tmp=substr($tmp,0,-5);
-    $tmp=explode('<br />',$tmp);
+    $tmp=explode('<br/>',$tmp);
     if (count($tmp) == 1) {
         $tmp = array($tmp[0]);
     } elseif (count($tmp) == 2) {
