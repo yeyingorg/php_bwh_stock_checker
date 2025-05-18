@@ -196,6 +196,7 @@ for ($i=1; $i<=$plan_count; $i++) {
     $tmp=str_replace('Quarterly','/季度',$tmp);
     $tmp=str_replace('Semi-Annually','/半年',$tmp);
     $tmp=str_replace('Annually','/年',$tmp);
+    $tmp=substr($tmp,0,-5);
     $tmp=explode('<br />',$tmp);
     if (count($tmp) == 1) {
         $tmp = $tmp[0];
