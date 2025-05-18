@@ -12,8 +12,8 @@ https://github.com/yeyingorg/php_bwh_stock_checker
 $aff=31993; # aff号
 $bwh_domain="bwh81.net"; # 点击跳转的搬瓦工域名，不带https://
 
-$promo_code="BWHCCNCXVV"; # 优惠码
-$promo_percentage="6.78%"; # 优惠码百分比(带%)
+$promo_code="BWHCGLUKKB"; # 优惠码
+$promo_percentage="6.77%"; # 优惠码百分比(带%)
 
 $special_promo_code=""; # 节日优惠码 没有则不填
 $special_promo_percentage=""; # 节日优惠码百分比(带%)
@@ -136,7 +136,7 @@ for ($i=1; $i<=$plan_count; $i++) {
 
     # ssd
     $tmp=explode('SSD: ',$cart_explode[$i]);
-    $tmp=explode('<br/>',$tmp[1]);
+    $tmp=explode('<br />',$tmp[1]);
     $tmp=$tmp[0];
     $tmp=str_replace(' RAID-10','',$tmp);
     $tmp=str_replace('GB','',$tmp);
@@ -145,7 +145,7 @@ for ($i=1; $i<=$plan_count; $i++) {
 
     # ram
     $tmp=explode('RAM: ',$cart_explode[$i]);
-    $tmp=explode('<br/>',$tmp[1]);
+    $tmp=explode('<br />',$tmp[1]);
     $tmp=$tmp[0];
     if (strpos($tmp,'MB') !== false) {
         $tmp=str_replace('MB','',$tmp);
@@ -158,7 +158,7 @@ for ($i=1; $i<=$plan_count; $i++) {
 
     # cpu
     $tmp=explode('CPU: ',$cart_explode[$i]);
-    $tmp=explode('<br/>',$tmp[1]);
+    $tmp=explode('<br />',$tmp[1]);
     $tmp=$tmp[0];
     $tmp=str_replace('Intel Xeon','',$tmp);
     $tmp=trim($tmp);
@@ -166,7 +166,7 @@ for ($i=1; $i<=$plan_count; $i++) {
 
     # transfer
     $tmp=explode('Transfer: ',$cart_explode[$i]);
-    $tmp=explode('<br/>',$tmp[1]);
+    $tmp=explode('<br />',$tmp[1]);
     $tmp=$tmp[0];
     $tmp=str_replace('/mo','',$tmp);
     if (strpos($tmp,'GB') !== false) {
@@ -180,14 +180,14 @@ for ($i=1; $i<=$plan_count; $i++) {
 
     # linkspeed
     $tmp=explode('Link speed: ',$cart_explode[$i]);
-    $tmp=explode('<br/>',$tmp[1]);
+    $tmp=explode('<br />',$tmp[1]);
     $tmp=$tmp[0];
     $tmp=str_replace('Gigabit','Gb',$tmp);
     $plan['linkspeed']=$tmp;
 
     # pricing
     $tmp=explode('pricing textcenter"> ',$cart_explode[$i]);
-    $tmp=explode("<br/>\n</td>",$tmp[1]);
+    $tmp=explode("</td>",$tmp[1]);
     $tmp=$tmp[0];
     $tmp=str_replace(' ','',$tmp);
     $tmp=str_replace("\n",'',$tmp);
@@ -196,7 +196,7 @@ for ($i=1; $i<=$plan_count; $i++) {
     $tmp=str_replace('Quarterly','/季度',$tmp);
     $tmp=str_replace('Semi-Annually','/半年',$tmp);
     $tmp=str_replace('Annually','/年',$tmp);
-    $tmp=explode('<br/>',$tmp);
+    $tmp=explode('<br />',$tmp);
     if (count($tmp) == 1) {
         $tmp = $tmp[0];
     } elseif (count($tmp) == 2) {
@@ -339,7 +339,7 @@ unset($plans);
 
 $plans_cheapest=array();
 $plans_cheapest[]=$plans_general[0];
-$plans_cheapest[]=$plans_cn2[0];
+#$plans_cheapest[]=$plans_cn2[0];
 $plans_cheapest[]=$plans_cn2_gia[0];
 $plans_cheapest[]=$plans_hk[0];
 $plans_cheapest[]=$plans_tokyo[0];
